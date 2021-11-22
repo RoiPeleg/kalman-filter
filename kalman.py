@@ -15,19 +15,19 @@ def predict(x_prev, P, F):
 gets a new measurement from the system and refines the guess
 """
 def measure(x_k, P, H, z):
-    R = np.array([[7,0],[0,7]])
+    R = np.array([[6**2,0],[0,6**2]])
     K_g = P.dot(np.transpose(H)).dot(np.linalg.inv(H.dot(P).dot(np.transpose(H)) + R )) #kalman gain
     x_new = x_k + K_g.dot(z - H.dot(x_k))
-    P_new = (1 - K_g.dot(H)).dot(P)
+    P_new = (np.eye(P.shape[0],P.shape[1]) - K_g.dot(H)).dot(P)
     return x_new, P_new
 
 
 def main():
     dt = 1  # delta t
     H = np.array([[1, 0, 0, 0], [0, 1, 0, 0]])
-    P = np.array([[7, 0, 0, 0], [0, 7, 0, 0],
-                 [0, 0, 100, 0], [0, 0, 0, 100]])
-    F = np.array([[1, 0, dt, 0], [0, 1, 0, dt], [0, 0, 0, 0], [0, 0, 0, 0]])
+    P = np.array([[7**2, 0, 0, 0], [0, 7**2, 0, 0],
+                 [0, 0, 100**2, 0], [0, 0, 0, 100**2]])
+    F = np.array([[1, 0, dt, 0], [0, 1, 0, dt], [0, 0, 1, 0], [0, 0, 0, 1]])
     print('H:\n', H)
     print('F:\n', F)
     print('P:\n', P)
